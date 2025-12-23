@@ -50,9 +50,10 @@ generate_pattern(color_palette, "gencamo.png", size=(500, 500), c=3)
 
 ![image](https://github.com/user-attachments/assets/145a31ce-73c7-49dc-9cf3-edf13d90b646)
 
-Pycamo can generate 2 type of digital camo: Fractal and pixel.
+Pycamo can generate 3 types of digital camo: Fractal, Pixel, Multicam-like(mimic multicam style).
 
-![Camouflage Pattern Generator](https://github.com/user-attachments/assets/5b31e80c-5f0b-4117-91ff-eef7f15abc37)
+<img width="1280" height="720" alt="Input image" src="https://github.com/user-attachments/assets/390ec22b-67d1-480b-ac32-4f2ce5be08f2" />
+
 
 
 ## How to Use
