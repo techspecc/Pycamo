@@ -108,22 +108,21 @@ You can edit parameter here
 
 
 
-To use GUI instead of command. 
+To use the GUI app instead of command line:
 
-```
-go to GUI folder
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python GUI/app.py
 ```
 
-then 
-
-```
-python GUI.py
-```
+If you get `No module named '_tkinter'`, your Python build does not include Tk.
+Use a Tk-enabled Python interpreter, recreate the venv, and run the same command again.
 
 ENJOY!
 
 ![image](https://github.com/user-attachments/assets/94d331a7-c8c4-4b1f-b329-8fa41f07f0c0)
-
 
 
 
