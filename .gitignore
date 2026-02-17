@@ -1,3 +1,7 @@
 
 /__pycache__
 gencamo.png
+.venv/
+.venv311/
+__pycache__/
+*.py[cod]
