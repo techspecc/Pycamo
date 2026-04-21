@@ -104,6 +104,7 @@ class CamoApp:
         self.width_var = tk.StringVar(value="500")
         self.height_var = tk.StringVar(value="500")
         self.pixel_style_var = tk.BooleanVar(value=False)
+        self.seamless_var = tk.BooleanVar(value=True)
         self.pixel_size_var = tk.StringVar(value="10")
         self.image_path_var = tk.StringVar(value="No image selected")
         self.reference_preset_var = tk.StringVar(value="Custom (Manual)")
@@ -149,6 +150,9 @@ class CamoApp:
         ttk.Label(params_frame, text="C value:").grid(row=0, column=2, sticky="w", pady=4)
         ttk.Entry(params_frame, textvariable=self.c_value_var, width=10).grid(
             row=0, column=3, sticky="w", pady=4, padx=(8, 14)
+        )
+        ttk.Checkbutton(params_frame, text="Seamless tile", variable=self.seamless_var).grid(
+            row=0, column=4, columnspan=2, sticky="w", pady=4
         )
 
         ttk.Label(params_frame, text="Size (W x H):").grid(row=1, column=0, sticky="w", pady=4)
@@ -375,6 +379,7 @@ class CamoApp:
                 size=(width, height),
                 c=c_value,
                 ratios=ratios,
+                seamless=self.seamless_var.get(),
             )
 
             if self.pixel_style_var.get():

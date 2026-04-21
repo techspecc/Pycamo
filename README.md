@@ -45,7 +45,7 @@ In this step, fractals are randomly generated within a given frame size and fill
 
 #### Example:
 ```python
-generate_pattern(color_palette, "gencamo.png", size=(500, 500), c=3)
+generate_pattern(color_palette, "gencamo.png", size=(500, 500), c=3, seamless=True)
 ```
 
 ![image](https://github.com/user-attachments/assets/145a31ce-73c7-49dc-9cf3-edf13d90b646)
@@ -103,6 +103,7 @@ You can edit parameter here
 | `ratios=[]`      | Passes the predefined ratios for each color to the `generate_pattern` function. |
 | `pixelize=True/False`  | Set True to pixelize camo, False for normal fractal. |
 | `pixel_size`  | Set pixel size for pixelize function. |
+| `seamless=True/False`  | Set True to generate a tileable seamless repeat pattern. |
 | `"demo_input/teste3.png"` | The input image file used to extract colors.                                 |
 | `"gencamo.png"`      | The output file name where the generated pattern will be saved.                 |
 
@@ -123,7 +124,6 @@ Use a Tk-enabled Python interpreter, recreate the venv, and run the same command
 ENJOY!
 
 ![image](https://github.com/user-attachments/assets/94d331a7-c8c4-4b1f-b329-8fa41f07f0c0)
-
 
 
 

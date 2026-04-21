@@ -67,6 +67,18 @@ def nat_filt_im(size=(), c=2.0):
 
     return filtered
 
+def wrap_majority_filter(label_map, n_colors, kernel_size=3):
+    radius = kernel_size // 2
+    color_ids = np.arange(n_colors, dtype=np.uint8)[:, None, None]
+    vote_counts = np.zeros((n_colors, *label_map.shape), dtype=np.uint8)
+
+    for dy in range(-radius, radius + 1):
+        for dx in range(-radius, radius + 1):
+            shifted = np.roll(label_map, shift=(dy, dx), axis=(0, 1))
+            vote_counts += (shifted[None, :, :] == color_ids).astype(np.uint8)
+
+    return np.argmax(vote_counts, axis=0).astype(np.uint8)
+
 def pixelize_image(image, pixel_size=10):
     # Load the image
     image = image
@@ -77,8 +89,16 @@ def pixelize_image(image, pixel_size=10):
     pixelated_image = small_image.resize(image.size, Image.NEAREST)
     return pixelated_image
 
-def generate_pattern(colors_hex, output_filename, size=(), c=2.0, ratios=None, pixelize=False, pixel_size=5):
-    fp = np.ones((3, 3)).astype(np.uint8)
+def generate_pattern(
+    colors_hex,
+    output_filename,
+    size=(),
+    c=2.0,
+    ratios=None,
+    pixelize=False,
+    pixel_size=5,
+    seamless=True,
+):
     
     # Filter out colors with zero ratios 
     if ratios is not None:
@@ -125,15 +145,17 @@ def generate_pattern(colors_hex, output_filename, size=(), c=2.0, ratios=None, p
         color_map[indices] = i
 
     color_map = color_map.reshape(size)
-    final_map = modal(color_map, fp)
+    if seamless:
+        final_map = wrap_majority_filter(color_map, n_colors=n_colors, kernel_size=3)
+    else:
+        fp = np.ones((3, 3)).astype(np.uint8)
+        final_map = modal(color_map, fp)
 
     img = Image.new("P", size, (0, 0, 0))
     img.putdata(final_map.flatten())
     img.putpalette(palette)
     if pixelize is True:
         img = pixelize_image(img, pixel_size)
-        img.save(output_filename)
-    else:
+    if output_filename:
         img.save(output_filename)
     return img
-

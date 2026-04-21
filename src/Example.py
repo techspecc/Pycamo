@@ -9,8 +9,18 @@ color_palette = pycamo.extract_palette("demo_input/teste3.png", num_colors=4)
 #pixelize
 pixelize = True # Set to True to pixelize the output image 
 pixel_size =  5# Size of the pixelization
+seamless = True  # Set to True to generate a tileable/repeatable pattern
 
 # Ratios for each color in the palette
 ratios = [25, 25, 25, 25]  # Example ratios for each color
 
-pycamo.generate_pattern(color_palette, "gencamo.png", size=(500, 500), c=1.2, ratios=ratios, pixelize=pixelize, pixel_size=pixel_size)
+pycamo.generate_pattern(
+    color_palette,
+    "gencamo.png",
+    size=(500, 500),
+    c=1.2,
+    ratios=ratios,
+    pixelize=pixelize,
+    pixel_size=pixel_size,
+    seamless=seamless,
+)

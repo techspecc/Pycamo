@@ -129,6 +129,12 @@ class TkinterUI:
             self.root, text="Pixel style", variable=self.pixel_style, onvalue=1, offvalue=0
         )
         self.check_pixel.place(x=550.0, y=180.0)
+        self.seamless_tile = IntVar()
+        self.seamless_tile.set(1)
+        self.check_seamless = Checkbutton(
+            self.root, text="Seamless tile", variable=self.seamless_tile, onvalue=1, offvalue=0
+        )
+        self.check_seamless.place(x=550.0, y=250.0)
 
     def _create_buttons(self):
         button_image_1 = PhotoImage(file=self.assets_helper.get_asset_path("button_1.png"))
@@ -327,7 +333,7 @@ class Uifunctions:
         # Check if the check box is checked if checked pixelize the image and save it to the output folder.
         if self.ui.pixel_style.get() == 1:
             img = Camologic.generate_pattern(colors_hex, None, (int(self.ui.entry_size1.get()), int(self.ui.entry_size2.get())), 
-                            c=float(self.ui.entry_Cvalue.get()), ratios=ratios)
+                            c=float(self.ui.entry_Cvalue.get()), ratios=ratios, seamless=bool(self.ui.seamless_tile.get()))
             if self.ui.entry_pixel_size.get() == "":
                 messagebox.showerror("Error", "Please fill pixel size")
             else: 
@@ -335,7 +341,7 @@ class Uifunctions:
         else:
             # Generate the pattern without saving
             img = Camologic.generate_pattern(colors_hex, None, (int(self.ui.entry_size1.get()), int(self.ui.entry_size2.get())), 
-                            c=float(self.ui.entry_Cvalue.get()), ratios=ratios)
+                            c=float(self.ui.entry_Cvalue.get()), ratios=ratios, seamless=bool(self.ui.seamless_tile.get()))
         
 
         current_generated_image = img  # Store the generated image

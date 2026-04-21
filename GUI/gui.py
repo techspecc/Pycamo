@@ -157,6 +157,12 @@ pixel_style.set(0)
 check_pixel = Checkbutton(window, text="Pixel style", variable=pixel_style, onvalue=1, offvalue=0)
 check_pixel.place(x=550.0, y=180.0)
 
+# Create a check box for seamless/tileable output
+seamless_tile = IntVar()
+seamless_tile.set(1)
+check_seamless = Checkbutton(window, text="Seamless tile", variable=seamless_tile, onvalue=1, offvalue=0)
+check_seamless.place(x=550.0, y=250.0)
+
 # create entry for pixel size
 entry_pixel_size = Entry(bd=0, bg="#FFFFFF", fg="#000716", highlightthickness=0)
 entry_pixel_size.place(x=560.0, y=220.0, width=74.0, height=28.0)
@@ -232,9 +238,20 @@ def nat_filt_im(size=(), c=2.0):
     filtered = (filtered - np.min(filtered)) / (np.max(filtered) - np.min(filtered))
 
     return filtered
+
+def wrap_majority_filter(label_map, n_colors, kernel_size=3):
+    radius = kernel_size // 2
+    color_ids = np.arange(n_colors, dtype=np.uint8)[:, None, None]
+    vote_counts = np.zeros((n_colors, *label_map.shape), dtype=np.uint8)
+
+    for dy in range(-radius, radius + 1):
+        for dx in range(-radius, radius + 1):
+            shifted = np.roll(label_map, shift=(dy, dx), axis=(0, 1))
+            vote_counts += (shifted[None, :, :] == color_ids).astype(np.uint8)
+
+    return np.argmax(vote_counts, axis=0).astype(np.uint8)
 ###### Generate camo pattern ######  new algorithm to generate camo pattern now :))
-def generate_pattern(colors_hex, output_filename, size=(), c=2.0, ratios=None):
-    fp = np.ones((3, 3)).astype(np.uint8)
+def generate_pattern(colors_hex, output_filename, size=(), c=2.0, ratios=None, seamless=True):
     
     # Filter out colors with zero ratios 
     if ratios is not None:
@@ -281,7 +298,11 @@ def generate_pattern(colors_hex, output_filename, size=(), c=2.0, ratios=None):
         color_map[indices] = i
 
     color_map = color_map.reshape(size)
-    final_map = modal(color_map, fp)
+    if seamless:
+        final_map = wrap_majority_filter(color_map, n_colors=n_colors, kernel_size=3)
+    else:
+        fp = np.ones((3, 3)).astype(np.uint8)
+        final_map = modal(color_map, fp)
     
     img = Image.new("P", size, (0, 0, 0))
     img.putdata(final_map.flatten())
@@ -350,13 +371,13 @@ def generate_pattern_from_entries():
     # Check if the check box is checked if checked pixelize the image and save it to the output folder.
     if pixel_style.get() == 1:
         img = generate_pattern(colors_hex, None, (int(entry_size1.get()), int(entry_size2.get())), 
-                         c=float(entry_Cvalue.get()), ratios=ratios)
+                         c=float(entry_Cvalue.get()), ratios=ratios, seamless=bool(seamless_tile.get()))
     
         img = pixelize_image(img, pixel_size=int(entry_pixel_size.get()))
     else:
         # Generate the pattern without saving
         img = generate_pattern(colors_hex, None, (int(entry_size1.get()), int(entry_size2.get())), 
-                         c=float(entry_Cvalue.get()), ratios=ratios)
+                         c=float(entry_Cvalue.get()), ratios=ratios, seamless=bool(seamless_tile.get()))
     
 
     current_generated_image = img  # Store the generated image
